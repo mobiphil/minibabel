@@ -3,7 +3,7 @@
 
 #include "be/core/Object.h"
 
-interface be_core_Circle: be_core_Shape
+typetable be_core_Circle: be_core_Shape
 {
    be_core_u32 area(); /* the first parameter is the return type and method name */
 };

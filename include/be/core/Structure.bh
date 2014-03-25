@@ -3,7 +3,7 @@
 
 #include "be/core/Object.h"
 
-interface be_core_Structure: be_core_Object
+typetable be_core_Structure: be_core_Object
 {
    be_core_u32 area(); /* the first parameter is the return type and method name */
    be_core_DateTime lastUpdate;
