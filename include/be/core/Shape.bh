@@ -3,24 +3,20 @@
 
 #include "be/core/Object.h"
 
-/* all virtual methods are specified separatelly
-   they will make up the virtual function pointer table
+/* the interface contains:
+-> virtual methods
+-> properties (opaq data member accessors)
 */
-virtuals be_core_Shape: be_core_Object
+interface be_core_Shape: be_core_Object
 {
    be_core_u32 area(); /* the first parameter is the return type and method name */
-};
-
-methods be_core_Shape
-{
-   be_core_u32 nonVirtual();
-};
-
-/* properties are stored as offset inside the object */
-properties be_core_Shape
-{
    be_core_s32 color; /* this is just a simple accessor */
 };
+
+/* the non virtual methods are also part of the interface but are declared outside */
+/* note the syntax similar to C++ :. but different */
+be_core_u32 be_core_Shape:.nonVirtual();
+
 
 
 #endif  // BE_CORE_SHAPE_H_

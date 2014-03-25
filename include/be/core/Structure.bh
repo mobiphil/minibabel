@@ -3,25 +3,13 @@
 
 #include "be/core/Object.h"
 
-/* all virtual methods are specified separatelly
-   they will make up the virtual function pointer table
-*/
-virtuals be_core_Structure: be_core_Object
+interface be_core_Structure: be_core_Object
 {
    be_core_u32 area(); /* the first parameter is the return type and method name */
-};
-
-methods be_core_Structure
-{
-      
-};
-
-/* properties are stored as offset inside the object */
-* for each property there must be a member of the body with same name and type*/
-properties be_core_Structure
-{
    be_core_DateTime lastUpdate;
 };
+
+
 
 
 #endif  // BE_CORE_STRUCTURE_H_
