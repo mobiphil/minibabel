@@ -1,0 +1,29 @@
+#ifndef BE_CORE_CIRCLE_H_
+#define BE_CORE_CIRCLE_H_
+
+#include "be/core/Object.h"
+
+/* all virtual methods are specified separatelly
+   they will make up the virtual function pointer table
+*/
+virtuals be_core_Circle: be_core_Shape
+{
+   be_core_u32 area(); /* the first parameter is the return type and method name */
+};
+
+/* any non-virtual method */
+methods be_core_Circle
+{
+   
+};
+
+/* properties are stored as offset inside the object */
+properties be_core_Circle
+{
+};
+
+
+#endif  // BE_CORE_CIRCLE_H_
+
+
+

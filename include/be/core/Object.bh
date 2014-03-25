@@ -1,0 +1,119 @@
+#ifndef BE_CORE_OBJECT_H_
+#define BE_CORE_OBJECT_H_
+
+#include "be/core/sdt.h"
+
+/* naming convention (randomly)
+ * underscore after a member name means private
+ * underscore before a type name means it is "legacy" type, pointer etc 
+ *(versus reference types, see below)
+ * */
+
+/* reference type is an unsigned 32 bit int both on 32 and 64 bit platform 
+ * a reference is kind of pointer but the address si calculated like the
+ * segment based addressing: context (shifted) + base address contained by reference
+ * */
+
+/* for each object type (class) we have two structures:
+ * -> the interface, contains the virtual function pointer table + basic type information
+ * -> the body that contains the data itself
+ * 
+ * -> interface is defined in the header
+ * -> body is defined in the implementation
+ * -> members are accessd through setters/getters (setters/getters contain an offset in the
+ *  object, offset initialized at compile time or runtime ... to be designed)
+ *
+ *
+ * ->body in implementation has several advantages: (opaque pointer)
+ *   -> changing data structure, does not affect header-> no need to recompile all 
+ *
+ *
+ * -> inheritance:
+ *  -> for the interface the new virtual methods are added after the methods of the base type
+ *  -> for body, a new struct is defined that is mapped at the area after the base type
+ *
+ *
+ * -> at the end everything is an object where the pointer to the type is the only thing visible
+ *  rest is opaque
+ */
+
+
+/* the context holds the 
+ * for 32 bit the start of the main data structure for the Fiber
+ * for 64 bit the address base which is the same as the entry into 
+ * */
+
+typedef struct { be_core_u32 val_;} be_core_Object;
+typedef struct { be_core_u32 val_;} be_core_Object_Meta;
+typedef struct { be_core_u32 val_;} be_core_Object_Meta_Meta;
+
+typedef struct _be_core_Object_           _be_core_Object;
+typedef struct _be_core_Object_Meta_      _be_core_Object_Meta;
+/* TODO this is a hack... see what can we do with meta struct def */
+typedef struct _be_core_Object_Meta_      _be_core_Object_Meta_Meta;
+typedef struct _be_core_Object_Impl_      _be_core_Object_Impl;
+
+typedef struct _be_core_Reflection_ _be_core_Reflection;
+
+be_core_Object be_core_Object_fromRef(be_core_Context context, unsigned int val);
+//_be_core_Object *_be_core_Object_fromRef(be_core_Context context, be_core_Object);
+_be_core_Object *_be_core_Object_getObjectFrom(be_core_Context context, unsigned int val);
+
+be_core_Object be_core_Object_null();
+
+
+enum { be_core_Object_rank = 0  };
+/* forward declaration */
+
+struct _be_core_Object_
+{
+   void *meta_;
+
+};
+
+struct _be_core_Reflection_
+{
+   be_core_u32 attr_; /* some attributes like: bound for public, visible ... donno ... to see in the future*/
+   char* name_;
+   be_core_s32 offset_;
+   be_core_Object meta_; 
+};
+
+/* for the time being the class meta does not have a class itself (behaviour) */
+
+/* TODO we should assume that Impl through the inheritance are 4 byte aligned 
+ we could then either use 16 bit for the following two, or encode further info
+ 
+ */
+struct _be_core_Object_Meta_ {
+  _be_core_Object super_;
+  be_core_sdt_enum typeId_;
+  char name[50];
+  _be_core_Object_Meta *superPtr_;
+  _be_core_Reflection *reflection_;
+  be_core_u32 reflectionLength_;
+  be_core_u32 objSize_;
+  be_core_u32 implOffset_; /* the offset where the current "subclass" starts in the body*/ 
+  be_core_Object (*alloc)(be_core_Context context, be_core_Object_Meta factory);
+  be_core_Object (*init)(be_core_Context context, be_core_Object self); /* constructor/initializer */
+  be_core_Object (*clone)(be_core_Context context, be_core_Object self);
+  be_core_s32 (*read)(be_core_Context context, be_core_Object self, be_core_Object media);
+  be_core_s32 (*write)(be_core_Context context, be_core_Object self, be_core_Object media);
+};
+
+/* TODO  does it make sense to subclass Meta_Meta_ from Meta?? */
+struct _be_core_Object_Meta_Meta_ 
+{
+   _be_core_Object_Meta super_; /* object class is also subclass of object */
+
+
+};
+
+be_core_Object_Meta be_core_Object_Meta_singleton(be_core_Context context); 
+_be_core_Object_Meta *_be_core_Object_Meta_singleton(be_core_Context context); 
+
+be_core_Object_Meta_Meta be_core_Object_Meta_Meta_singleton(be_core_Context context); 
+_be_core_Object_Meta_Meta *_be_core_Object_Meta_Meta_singleton(be_core_Context context); 
+
+
+#endif 

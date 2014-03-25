@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include "be/core/Shape.bc"
+
+
+body be_core_Shape: be_core_Object
+{
+   be_core_s32 color; /* this is just a simple accessor */
+};
+
+/* additional methods can be declared in the implementation file*/
+/* these will be the private methods */
+/* virtual methods cannot be private */
+methods be_core_Shape
+{
+
+};
+
+/* method implementation 
+note the syntax different 
+*/
+be_core_Fiber be_core_Fiber:.init()
+{
+   /* we will have self of type be_core_Fiber instead of this and context 
+   of type be_core_Context always available */
+
+
+   /* for calling a method compromise for the notation instead of '.' or '->' 
+   as the calling convention is completelly different
+   */
+   self..nonVirtual();
+   
+   /* properties would be call in similar way */
+
+   be_core_s32 color;
+   self..setColor(color);
+
+   /* or */
+
+   color = self..getColor();
+
+}
+
+
