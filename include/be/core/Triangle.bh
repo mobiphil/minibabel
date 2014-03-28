@@ -3,7 +3,7 @@
 
 #include "be/core/Object.h"
 
-typetable be_core_Triangle: be_core_Shape
+white be_core_Triangle: be_core_Shape
 {
    be_core_u32 area(); /* the first parameter is the return type and method name */
 };

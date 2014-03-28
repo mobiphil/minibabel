@@ -2,7 +2,7 @@
 #include "be/core/Shape.bc"
 
 
-body be_core_Circle: be_core_Shape
+black be_core_Circle: be_core_Shape
 {
    be_core_s32 radius;
 }
